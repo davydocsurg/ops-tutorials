@@ -28,4 +28,6 @@ jobs:
                       ${{ runner.os }}-build-
                       ${{ runner.os }}-
             - run: npm ci
+            - name: Build
+              run: npm run build --if-present
             - run: echo Hello, world!
