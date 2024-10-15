@@ -37,6 +37,15 @@ jobs:
               with:
                   name: dist
                   path: dist
+            - name: Slack Notification
+              uses: 8398a7/action-slack@v3
+              with:
+                  status: ${{ job.status }}
+                  text: Build job status is ${{ job.status }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+              if: always()
 
     deploy-staging:
         needs: build
@@ -47,6 +56,15 @@ jobs:
         steps:
             - name: Deploy to staging
               run: echo "Deploying to staging environment"
+            - name: Slack Notification
+              uses: 8398a7/action-slack@v3
+              with:
+                  status: ${{ job.status }}
+                  text: Staging deployment status is ${{ job.status }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+              if: always()
 
     deploy-production:
         needs: [build, deploy-staging]
@@ -57,3 +75,12 @@ jobs:
         steps:
             - name: Deploy to production
               run: echo "Deploying to production environment"
+            - name: Slack Notification
+              uses: 8398a7/action-slack@v3
+              with:
+                  status: ${{ job.status }}
+                  text: Production deployment status is ${{ job.status }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+              if: always()
